@@ -50,7 +50,7 @@ public class ArgsParser {
             }
         }
 
-        writer = new FileWriterAdapter(args[index++], sortType);
+        writer = new FileWriterAdapter(args[index++], sortType, elementType);
 
         readers = new ArrayList<>();
         for (int i = index; i < args.length; i++) {

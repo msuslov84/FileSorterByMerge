@@ -5,11 +5,14 @@ import com.suslov.cft.exceptions.ArgsException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
+import java.util.logging.Logger;
 
 /**
  * @author Mikhail Suslov
  */
 public class FileReaderAdapter {
+    public static final Logger LOG = Logger.getLogger(FileReaderAdapter.class.getName());
+
     private final Scanner scanner;
     private String nextElementName;
     private boolean endOfFile;
@@ -19,8 +22,13 @@ public class FileReaderAdapter {
         this.fileName = fileName;
         try {
             scanner = new Scanner(new File(fileName));
-            if (scanner.hasNext()) {
-                nextElementName = scanner.next();
+            if (scanner.hasNextLine()) {
+                nextElementName = scanner.nextLine();
+                if (nextElementName.contains(" ")) {
+                    LOG.warning(String.format("The line '%s' in the file %s contains spaces, it will be skipped.",
+                            nextElementName, fileName));
+                    getNextElementName();
+                }
             } else {
                 endOfFile = true;
                 throw new ArgsException(String.format("File '%s' is missing data\n", fileName));
@@ -33,8 +41,13 @@ public class FileReaderAdapter {
     public String getNextElementName() {
         String currentElementName = nextElementName;
 
-        if (scanner.hasNext()) {
-            nextElementName = scanner.next();
+        if (scanner.hasNextLine()) {
+            nextElementName = scanner.nextLine();
+            if (nextElementName.contains(" ")) {
+                LOG.warning(String.format("The line '%s' in the file %s contains spaces, it will be skipped.",
+                        nextElementName, fileName));
+                getNextElementName();
+            }
         } else {
             nextElementName = "";
             endOfFile = true;

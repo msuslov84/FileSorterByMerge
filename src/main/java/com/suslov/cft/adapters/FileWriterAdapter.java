@@ -1,6 +1,7 @@
 package com.suslov.cft.adapters;
 
 import com.suslov.cft.models.Sort;
+import com.suslov.cft.models.Type;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -16,14 +17,16 @@ public class FileWriterAdapter {
     private final File file;
     private String lastElement;
 
-    public FileWriterAdapter(String fileName, Sort sortType) {
+    public FileWriterAdapter(String fileName, Sort sortType, Type elementType) {
         this.file = new File(fileName);
         try {
             new FileWriter(file, false).close();
         } catch (IOException e) {
             LOG.warning(String.format("File write error in '%s': %s", file.getName(), e.getMessage()));
         }
-        lastElement = String.valueOf(sortType == Sort.ASC ? Integer.MIN_VALUE : Integer.MAX_VALUE);
+        if (elementType == Type.INTEGER) {
+            lastElement = String.valueOf(sortType == Sort.ASC ? Integer.MIN_VALUE : Integer.MAX_VALUE);
+        }
     }
 
     public void write(Integer element) {

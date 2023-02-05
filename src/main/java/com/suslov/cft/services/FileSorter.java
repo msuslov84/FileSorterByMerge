@@ -51,12 +51,16 @@ public class FileSorter {
                 }
             } else {
                 Map.Entry<FileReaderAdapter, String> result;
-                if (sortType == Sort.DESC) {
+                if (sortType == Sort.ASC) {
                     result = Collections.min(nextElementsToSort.entrySet(), Map.Entry.comparingByValue());
                 } else {
                     result = Collections.max(nextElementsToSort.entrySet(), Map.Entry.comparingByValue());
                 }
-                processComparisonString(result);
+                try {
+                    processComparisonString(result);
+                } catch (ArgsException exp) {
+                    LOG.warning(exp.getMessage());
+                }
             }
         }
     }
@@ -81,7 +85,7 @@ public class FileSorter {
         String lastValue = writer.getLastElement();
 
         FileReaderAdapter reader = result.getKey();
-        if ((sortType == Sort.ASC && currentValue.compareTo(lastValue) < 0)
+        if ((sortType == Sort.ASC && lastValue != null && currentValue.compareTo(lastValue) < 0)
                 || (sortType == Sort.DESC && currentValue.compareTo(lastValue) > 0)) {
             scrollToNextElement(reader);
             throw new ArgsException(String.format("In the file '%s' the sorting of the elements is broken, the element '%s' will be skipped",
