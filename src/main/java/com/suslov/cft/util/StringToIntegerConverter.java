@@ -21,9 +21,11 @@ public class StringToIntegerConverter {
             } catch (NumberFormatException exp) {
                 // Пропускаем некорректный элемент коллекции, алгоритм продолжает работу
                 if (!reader.isEndOfFile()) {
-                    reader.getNextElementName();
+                    mapByString.put(reader, reader.getNextElementName());
+                } else {
+                    mapByString.remove(reader);
                 }
-                throw new ArgsException(String.format("ОШИБКА: не удалось преобразовать в целое число элемент %s входного файла %s.",
+                throw new ArgsException(String.format("Failed to convert element '%s' of the input file '%s' to an integer, the element will be skipped",
                         element, reader.getFileName()));
             }
         }

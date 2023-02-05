@@ -1,6 +1,5 @@
 package com.suslov.cft.services;
 
-import com.sun.xml.internal.ws.api.SOAPVersion;
 import com.suslov.cft.adapters.FileReaderAdapter;
 import com.suslov.cft.adapters.FileWriterAdapter;
 import com.suslov.cft.exceptions.ArgsException;
@@ -8,12 +7,18 @@ import com.suslov.cft.models.Sort;
 import com.suslov.cft.models.Type;
 import com.suslov.cft.util.StringToIntegerConverter;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Logger;
 
 /**
  * @author Mikhail Suslov
  */
 public class FileSorter {
+    public static final Logger LOG = Logger.getLogger(FileSorter.class.getName());
+
     private final FileWriterAdapter writer;
     private final Sort sortType;
     private final Type elementType;
@@ -42,8 +47,7 @@ public class FileSorter {
                     }
                     processComparisonInteger(result);
                 } catch (ArgsException exp) {
-                    // TODO: добавить логи в файл вместо вывода сообщения в консоль
-                    System.out.println(exp.getMessage());
+                    LOG.warning(exp.getMessage());
                 }
             } else {
                 Map.Entry<FileReaderAdapter, String> result;
@@ -61,13 +65,14 @@ public class FileSorter {
         int currentValue = result.getValue();
         int lastValue = Integer.parseInt(writer.getLastElement());
 
+        FileReaderAdapter reader = result.getKey();
         if ((sortType == Sort.ASC && currentValue < lastValue) || (sortType == Sort.DESC && currentValue > lastValue)) {
-            throw new ArgsException(String.format("ОШИБКА: в файле %s сбита сортировка элементов, элемент %d будет пропущен",
+            scrollToNextElement(reader);
+            throw new ArgsException(String.format("In the file '%s' the sorting of the elements is broken, the element '%d' will be skipped",
                     result.getKey().getFileName(), currentValue));
         }
 
         writer.write(currentValue);
-        FileReaderAdapter reader = result.getKey();
         scrollToNextElement(reader);
     }
 
@@ -75,14 +80,15 @@ public class FileSorter {
         String currentValue = result.getValue();
         String lastValue = writer.getLastElement();
 
+        FileReaderAdapter reader = result.getKey();
         if ((sortType == Sort.ASC && currentValue.compareTo(lastValue) < 0)
                 || (sortType == Sort.DESC && currentValue.compareTo(lastValue) > 0)) {
-            throw new ArgsException(String.format("ОШИБКА: в файле %s сбита сортировка элементов, элемент %s будет пропущен",
+            scrollToNextElement(reader);
+            throw new ArgsException(String.format("In the file '%s' the sorting of the elements is broken, the element '%s' will be skipped",
                     result.getKey().getFileName(), currentValue));
         }
 
         writer.write(currentValue);
-        FileReaderAdapter reader = result.getKey();
         scrollToNextElement(reader);
     }
 

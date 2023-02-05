@@ -23,10 +23,10 @@ public class FileReaderAdapter {
                 nextElementName = scanner.next();
             } else {
                 endOfFile = true;
-                throw new ArgsException(String.format("ОШИБКА: в файле '%s' отсутствуют данные\n", fileName));
+                throw new ArgsException(String.format("File '%s' is missing data\n", fileName));
             }
         } catch (FileNotFoundException exp) {
-            throw new ArgsException(String.format("ОШИБКА ЧТЕНИЯ ФАЙЛА '%s': %s\n", fileName, exp.getMessage()));
+            throw new ArgsException(String.format("File read error in '%s': %s\n", fileName, exp.getMessage()));
         }
     }
 

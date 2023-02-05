@@ -8,23 +8,26 @@ import com.suslov.cft.models.Type;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 /**
  * @author Mikhail Suslov
  */
 public class ArgsParser {
-    private Sort sortType;
+    public static final Logger LOG = Logger.getLogger(ArgsParser.class.getName());
+
+    private Sort sortType = Sort.ASC;
     private Type elementType;
     private final FileWriterAdapter writer;
     private final List<FileReaderAdapter> readers;
 
     public ArgsParser(String[] args) throws ArgsException {
         if (args.length < 3) {
-            throw new ArgsException("ОШИБКА: Передано недостаточно входных параметров!");
+            throw new ArgsException("Not enough input parameters passed!");
         }
 
         int index = 0;
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < 3; i++) {
             switch (args[i]) {
                 case "-a":
                     sortType = Sort.ASC;
@@ -40,10 +43,14 @@ public class ArgsParser {
                     break;
                 default:
                     index = i;
+                    break;
+            }
+            if (index > 0) {
+                break;
             }
         }
 
-        writer = new FileWriterAdapter(args[index++]);
+        writer = new FileWriterAdapter(args[index++], sortType);
 
         readers = new ArrayList<>();
         for (int i = index; i < args.length; i++) {
@@ -51,12 +58,11 @@ public class ArgsParser {
                 readers.add(new FileReaderAdapter(args[i]));
             } catch (ArgsException exp) {
                 // Проблемные файлы просто пропускаем без заверешения программы
-                // TODO: добавить логи в файл вместо вывода сообщения в консоль
-                System.out.println(exp.getMessage());
+                LOG.warning(exp.getMessage());
             }
         }
         if (readers.isEmpty()) {
-            throw new ArgsException("ОШИБКА: в списке параметров не переданы имена файлов с корректными данными!");
+            throw new ArgsException("File names with correct data were not passed in the parameter list!");
         }
     }
 
