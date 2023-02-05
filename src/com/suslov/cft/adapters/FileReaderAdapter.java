@@ -10,11 +10,13 @@ import java.util.Scanner;
  * @author Mikhail Suslov
  */
 public class FileReaderAdapter {
-    private Scanner scanner;
+    private final Scanner scanner;
     private String nextElementName;
     private boolean endOfFile;
+    private final String fileName;
 
     public FileReaderAdapter(String fileName) throws ArgsException {
+        this.fileName = fileName;
         try {
             scanner = new Scanner(new File(fileName));
             if (scanner.hasNext()) {
@@ -29,10 +31,6 @@ public class FileReaderAdapter {
     }
 
     public String getNextElementName() {
-        if (endOfFile) {
-            return "";
-        }
-
         String currentElementName = nextElementName;
 
         if (scanner.hasNext()) {
@@ -48,5 +46,9 @@ public class FileReaderAdapter {
 
     public boolean isEndOfFile() {
         return endOfFile;
+    }
+
+    public String getFileName() {
+        return fileName;
     }
 }

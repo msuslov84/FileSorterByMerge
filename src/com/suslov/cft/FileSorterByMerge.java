@@ -10,15 +10,19 @@ import com.suslov.cft.services.FileSorter;
 public class FileSorterByMerge {
 
     public static void main(String[] args) {
+        // TODO: добавить логи в файл вместо вывода сообщения в консоль
+        System.out.println("Старт выполнения программы сортировки...");
         try {
             ArgsParser argsParser = new ArgsParser(args);
             FileSorter fileSorter = new FileSorter(argsParser.getWriter(), argsParser.getReaders(),
                     argsParser.getSortType(), argsParser.getElementType());
-            // Выполняем сортировку
+            fileSorter.sort();
         } catch (ArgsException exp) {
+            // TODO: добавить логи в файл вместо вывода сообщения в консоль
             System.out.println(exp.getMessage());
             return;
         }
-        // Завершаем выполнение программы
+        // TODO: добавить логи в файл вместо вывода сообщения в консоль
+        System.out.println("Выполнение программы сортировки завершено!");
     }
 }

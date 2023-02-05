@@ -1,8 +1,8 @@
 package com.suslov.cft.services;
 
-import com.suslov.cft.exceptions.ArgsException;
 import com.suslov.cft.adapters.FileReaderAdapter;
 import com.suslov.cft.adapters.FileWriterAdapter;
+import com.suslov.cft.exceptions.ArgsException;
 import com.suslov.cft.models.Sort;
 import com.suslov.cft.models.Type;
 
@@ -15,8 +15,8 @@ import java.util.List;
 public class ArgsParser {
     private Sort sortType;
     private Type elementType;
-    private FileWriterAdapter writer;
-    private List<FileReaderAdapter> readers;
+    private final FileWriterAdapter writer;
+    private final List<FileReaderAdapter> readers;
 
     public ArgsParser(String[] args) throws ArgsException {
         if (args.length < 3) {
@@ -51,6 +51,7 @@ public class ArgsParser {
                 readers.add(new FileReaderAdapter(args[i]));
             } catch (ArgsException exp) {
                 // Проблемные файлы просто пропускаем без заверешения программы
+                // TODO: добавить логи в файл вместо вывода сообщения в консоль
                 System.out.println(exp.getMessage());
             }
         }
