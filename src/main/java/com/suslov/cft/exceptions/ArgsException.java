@@ -28,7 +28,7 @@ public class ArgsException extends RuntimeException {
         INVALID_SORT("In the file '%1$s' the sorting of the elements is broken, the element '%2$s' will be skipped\n"),
         INVALID_CONVERT("Failed to convert element '%2$s' of the input file '%1$s' to an integer, the element will be skipped\n"),
         INVALID_WRITE("File write error in '%1$s': %2$s\n"),
-        INVALID_READ("File read error in '%s': %s\n");
+        INVALID_READ("File read error in '%1$s': %2$s\n");
 
         private final String name;
 
