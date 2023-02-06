@@ -28,7 +28,7 @@ public class FileSorterByMerge {
     }
 
     public static void startApplication(String[] args) {
-        LOG.info("Start the sorting application...");
+        LOG.info("Start the sorting application...\n");
         try {
             ArgsParser argsParser = new ArgsParser(args);
             FileSorter fileSorter = new FileSorter(argsParser.getWriter(), argsParser.getReaders(),
@@ -38,6 +38,6 @@ public class FileSorterByMerge {
             LOG.warning(exp.getMessage());
             return;
         }
-        LOG.info("The sorting application is completed!");
+        LOG.info("The sorting application is completed!\n");
     }
 }

@@ -10,6 +10,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
+import static com.suslov.cft.exceptions.ArgsException.ErrorCode.EMPTY_FILES;
+import static com.suslov.cft.exceptions.ArgsException.ErrorCode.MISSING_PARAMS;
+
 /**
  * @author Mikhail Suslov
  */
@@ -23,7 +26,7 @@ public class ArgsParser {
 
     public ArgsParser(String[] args) throws ArgsException {
         if (args.length < 3) {
-            throw new ArgsException("Not enough input parameters passed!");
+            throw new ArgsException(MISSING_PARAMS);
         }
 
         int index = 0;
@@ -50,6 +53,10 @@ public class ArgsParser {
             }
         }
 
+        if (elementType == null) {
+            throw new ArgsException(MISSING_PARAMS);
+        }
+
         writer = new FileWriterAdapter(args[index++], sortType, elementType);
 
         readers = new ArrayList<>();
@@ -62,7 +69,7 @@ public class ArgsParser {
             }
         }
         if (readers.isEmpty()) {
-            throw new ArgsException("File names with correct data were not passed in the parameter list!");
+            throw new ArgsException(EMPTY_FILES);
         }
     }
 

@@ -6,6 +6,8 @@ import com.suslov.cft.exceptions.ArgsException;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.suslov.cft.exceptions.ArgsException.ErrorCode.INVALID_CONVERT;
+
 /**
  * @author Mikhail Suslov
  */
@@ -25,8 +27,7 @@ public class StringToIntegerConverter {
                 } else {
                     mapByString.remove(reader);
                 }
-                throw new ArgsException(String.format("Failed to convert element '%s' of the input file '%s' to an integer, the element will be skipped",
-                        element, reader.getFileName()));
+                throw new ArgsException(INVALID_CONVERT, reader.getFileName(), element);
             }
         }
         return mapByInteger;

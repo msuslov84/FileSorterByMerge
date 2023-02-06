@@ -7,6 +7,9 @@ import java.io.FileNotFoundException;
 import java.util.Scanner;
 import java.util.logging.Logger;
 
+import static com.suslov.cft.exceptions.ArgsException.ErrorCode.EMPTY_FILE;
+import static com.suslov.cft.exceptions.ArgsException.ErrorCode.INVALID_READ;
+
 /**
  * @author Mikhail Suslov
  */
@@ -25,16 +28,16 @@ public class FileReaderAdapter {
             if (scanner.hasNextLine()) {
                 nextElementName = scanner.nextLine();
                 if (nextElementName.contains(" ")) {
-                    LOG.warning(String.format("The line '%s' in the file %s contains spaces, it will be skipped.",
+                    LOG.warning(String.format("The line '%s' in the file '%s' contains spaces, it will be skipped\n",
                             nextElementName, fileName));
                     getNextElementName();
                 }
             } else {
                 endOfFile = true;
-                throw new ArgsException(String.format("File '%s' is missing data\n", fileName));
+                throw new ArgsException(EMPTY_FILE, fileName);
             }
         } catch (FileNotFoundException exp) {
-            throw new ArgsException(String.format("File read error in '%s': %s\n", fileName, exp.getMessage()));
+            throw new ArgsException(INVALID_READ, fileName, exp.getMessage());
         }
     }
 
@@ -44,7 +47,7 @@ public class FileReaderAdapter {
         if (scanner.hasNextLine()) {
             nextElementName = scanner.nextLine();
             if (nextElementName.contains(" ")) {
-                LOG.warning(String.format("The line '%s' in the file %s contains spaces, it will be skipped.",
+                LOG.warning(String.format("The line '%s' in the file '%s' contains spaces, it will be skipped\n",
                         nextElementName, fileName));
                 getNextElementName();
             }

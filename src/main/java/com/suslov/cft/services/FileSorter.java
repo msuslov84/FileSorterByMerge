@@ -13,6 +13,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import static com.suslov.cft.exceptions.ArgsException.ErrorCode.INVALID_SORT;
+
 /**
  * @author Mikhail Suslov
  */
@@ -72,8 +74,7 @@ public class FileSorter {
         FileReaderAdapter reader = result.getKey();
         if ((sortType == Sort.ASC && currentValue < lastValue) || (sortType == Sort.DESC && currentValue > lastValue)) {
             scrollToNextElement(reader);
-            throw new ArgsException(String.format("In the file '%s' the sorting of the elements is broken, the element '%d' will be skipped",
-                    result.getKey().getFileName(), currentValue));
+            throw new ArgsException(INVALID_SORT, result.getKey().getFileName(), String.valueOf(currentValue));
         }
 
         writer.write(currentValue);
@@ -88,8 +89,7 @@ public class FileSorter {
         if ((sortType == Sort.ASC && lastValue != null && currentValue.compareTo(lastValue) < 0)
                 || (sortType == Sort.DESC && currentValue.compareTo(lastValue) > 0)) {
             scrollToNextElement(reader);
-            throw new ArgsException(String.format("In the file '%s' the sorting of the elements is broken, the element '%s' will be skipped",
-                    result.getKey().getFileName(), currentValue));
+            throw new ArgsException(INVALID_SORT, result.getKey().getFileName(), currentValue);
         }
 
         writer.write(currentValue);
